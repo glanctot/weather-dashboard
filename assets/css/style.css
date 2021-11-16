@@ -37,6 +37,8 @@ h1 {
     width: 100%;
     border-radius: 0.3rem;
     margin-bottom: .5rem;
+    padding: 0.25rem;
+    text-align: center;
 }
 .form-label {
     margin-bottom: 0.5rem;
@@ -50,4 +52,7 @@ h1 {
     color: white;
     text-align: center;
     font-size: 1.2em;
+    border: none;
+    outline: none;
 }
+
