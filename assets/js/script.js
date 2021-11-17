@@ -48,16 +48,49 @@ var getWeather = function(cityName) {
 
 var displayWeather = function(weather, searchTerm) {
     console.log(weather);
-    cityNameEl.innerHTML = searchTerm;
+    weatherEl.textContent = "";
+    // format date
+    var date = new Date(weather['dt'] * 1000);
+
+    // icon
+    var icon = weather['weather'][0]['icon'];
+
+    // 
+    cityNameEl.innerHTML = searchTerm + " " + date + icon;
+
+    
     // format data
     var temp = weather['main']['temp'];
     var humidity = weather['main']['humidity'];
     var wind = weather['wind']['speed'];
     
-    //create 
-    
-}
+    // display temp wind humidity 
+    var tempDisplay = document.createElement("p");
+    // tempDisplay.classList = "list-item";
+    tempDisplay.textContent = "Temp: " + temp + "F";
 
+    var humidityDisplay = document.createElement("p");
+    //humidityDisplay.classList = "list-item";
+    humidityDisplay.textContent = "Humidity: " + humidity + "%";
+
+    var windDisplay = document.createElement("p");
+    // windDisplay.classList = "list-item";
+    windDisplay.textContent = "Wind: " + wind + "MPH";
+
+    weatherEl.appendChild(tempDisplay);
+    weatherEl.appendChild(humidityDisplay);
+    weatherEl.appendChild(windDisplay);
+
+    var apiUrl = "https://api.openweathermap.org/data/2.5/onecall?lat=" + weather['coord']['lat'] + "&lon=" + weather['coord']['lon'] + "&appid=" + myKey + "&units=imperial";
+
+    fetch(apiUrl).then(function(response) {
+        response.json().then(function(data) {
+            var uv = document.createElement("p");
+            uv.textContent = "UV Index:" + " " + data['current']['uvi'];
+            weatherEl.appendChild(uv);
+        })
+    })
+}
 
 userFormEl.addEventListener("submit", formSubmit);
 
