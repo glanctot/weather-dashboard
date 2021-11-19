@@ -18,20 +18,19 @@ var formSubmit = function(event) {
     if (city) {
         getWeather(city);
         cityInputEl.value = "";
+
+        var cityListEl = document.createElement("li");
+        cityListEl.classList = "list-group-item mt-2";
+
+        var cityTitleEl = document.createElement("span");
+        cityTitleEl.textContent = city;
+
+        cityListEl.appendChild(cityTitleEl);
+
+        listEl.appendChild(cityListEl);
     } else {
         alert ("Please enter a City");
     }
-
-    var cityListEl = document.createElement("li");
-    cityListEl.classList = "list-group-item";
-
-    var cityTitleEl = document.createElement("span");
-    cityTitleEl.textContent = city;
-
-    cityListEl.appendChild(cityTitleEl);
-
-    listEl.appendChild(cityListEl);
-    
 }
 
 var getWeather = function(cityName) {
@@ -47,7 +46,7 @@ var getWeather = function(cityName) {
 }
 
 var displayWeather = function(weather, searchTerm) {
-    console.log(weather);
+    // console.log(weather);
     weatherEl.textContent = "";
 
     // format date
@@ -90,24 +89,26 @@ var displayWeather = function(weather, searchTerm) {
             uv.textContent = "UV Index:" + " " + data['current']['uvi'];
             weatherEl.appendChild(uv);
 
-            console.log(data);
+            // console.log(data);
+            
             for (var i = 1; i < data['daily'].length - 2; i++) {
                 var fiveDayCard = document.createElement("div");
-                fiveDayCard.classList = "card-body";
+                fiveDayCard.classList = "card bg-info";
+                
 
                 var fiveDay = data['daily'][i]['dt'];
                 var fiveDayDate = new Date(fiveDay * 1000).toLocaleDateString("en-US");
                 
+                var fiveDayTemp = data['daily'][i]['temp']['max'];
+                var fiveDayWind = data['daily'][i]['wind_speed'];
+                var fiveDayHumid = data['daily'][i]['humidity'];
+
+                fiveDayCard.textContent = (fiveDayDate +  "Temp: " + fiveDayTemp + "Wind: " + fiveDayWind + "MPH" +  "Humidity: " + fiveDayHumid + "%");
                 
+                fiveDayEl.appendChild(fiveDayCard);
             }
         })
     })
-
-    
-
-    
-
-
 }
 
 userFormEl.addEventListener("submit", formSubmit);
@@ -116,6 +117,6 @@ userFormEl.addEventListener("submit", formSubmit);
 // city gets added to search history
 // preseted with city name, date, icon, temp, humidity, wind speed and uv index
 // uv index color coded favorable green, moderate orange, severe red
-// 5 day forcast
+// 5 day forcast temp, wind, humidity
 // displays date, icon, temp, wind speed, humidity
 // click on city in search history again presented with same stats
