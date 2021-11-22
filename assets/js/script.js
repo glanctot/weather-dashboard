@@ -3,9 +3,9 @@ var cityInputEl = document.querySelector("#city");
 var weatherEl = document.querySelector("#weather-container");
 var cityNameEl = document.querySelector("#city-search-term");
 var listEl = document.querySelector(".list-group");
-var fiveDayEl = document.querySelector("#fiveDay");
+var forecastEl = document.querySelector("#forecast");
 var currentEl = document.querySelector(".current-weather");
-var fiveDayContainer = document.querySelector(".fiveDayContainer");
+var fiveDayContainer = document.querySelector(".five-header");
 
 // api key
 const myKey = "19c8ff289c37224bc84974fe7d88ee33";
@@ -19,6 +19,7 @@ var formSubmit = function(event) {
 
     if (city) {
         getWeather(city);
+        
         cityInputEl.value = "";
 
         var cityListEl = document.createElement("li");
@@ -52,7 +53,6 @@ var displayWeather = function(weather, searchTerm) {
     weatherEl.textContent = "";
 
     currentEl.classList.remove("d-none");
-    fiveDayContainer.classList.remove("d-none");
 
     // format date
     var date = new Date(weather['dt'] * 1000).toLocaleDateString("en-US");
@@ -62,10 +62,9 @@ var displayWeather = function(weather, searchTerm) {
     var iconDisplay = document.createElement("img");
     iconDisplay.setAttribute("src", "https://openweathermap.org/img/wn/" + icon + "@2x.png");
 
-    // 
+    // text context
     cityNameEl.innerHTML = searchTerm + " " + date;
 
-    
     // format data
     var temp = weather['main']['temp'];
     var humidity = weather['main']['humidity'];
@@ -93,6 +92,9 @@ var displayWeather = function(weather, searchTerm) {
 
     fetch(apiUrl).then(function(response) {
         response.json().then(function(data) {
+            // remove display none
+            fiveDayContainer.classList.remove("d-none");
+
             var uv = document.createElement("p");
             uv.textContent = "UV Index:" + " " + data['current']['uvi'];
             if (data['current']['uvi'] < 4) {
@@ -104,24 +106,40 @@ var displayWeather = function(weather, searchTerm) {
             }
             weatherEl.appendChild(uv);
 
-            // console.log(data);
+            forecastEl.textContent = "";
             
             for (var i = 1; i < data['daily'].length - 2; i++) {
-                var fiveDayCard = document.createElement("div");
-                fiveDayCard.classList = "card bg-primary text-light";
                 
-
+                var fiveDayCard = document.createElement("div");
+                fiveDayCard.classList = "card col-2 bg-primary text-light m-2";
+                forecastEl.appendChild(fiveDayCard);
+                
+                // forecast date format
                 var fiveDay = data['daily'][i]['dt'];
                 var fiveDayDate = new Date(fiveDay * 1000).toLocaleDateString("en-US");
-                
-                var fiveDayTemp = data['daily'][i]['temp']['max'];
-                var fiveDayWind = data['daily'][i]['wind_speed'];
-                var fiveDayHumid = data['daily'][i]['humidity'];
-                var fiveDayIcon = 
+                var fiveDayDateEl = document.createElement("h3");
+                fiveDayDateEl.textContent = fiveDayDate;
+                fiveDayCard.appendChild(fiveDayDateEl);
 
-                fiveDayCard.textContent = (fiveDayDate +  "Temp: " + fiveDayTemp + "Wind: " + fiveDayWind + "MPH" +  "Humidity: " + fiveDayHumid + "%");
+                // display icon
+                var fiveImg = document.createElement("img");
+                fiveImg.setAttribute("src", "https://openweathermap.org/img/wn/" + data['daily'][i]['weather'][0]['icon'] + "@2x.png");
+                fiveDayCard.appendChild(fiveImg);
                 
-                fiveDayEl.appendChild(fiveDayCard);
+                //display temp
+                var fiveDayTemp = document.createElement("p");
+                fiveDayTemp.textContent = "Temp: " + data['daily'][i]['temp']['max'] + "F";
+                fiveDayCard.appendChild(fiveDayTemp);
+
+                // display wind
+                var fiveDayWind = document.createElement("p");
+                fiveDayWind.textContent = "Wind: " + data['daily'][i]['wind_speed'] + "MPH";
+                fiveDayCard.appendChild(fiveDayWind);
+
+                //display humidity
+                var fiveDayHumid = document.createElement("p");
+                fiveDayHumid.textContent = "Humidity: " + data['daily'][i]['humidity'] + "%";
+                fiveDayCard.appendChild(fiveDayHumid);                
             }
         })
     })
