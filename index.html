@@ -20,7 +20,7 @@
                     <form id="user-form">
                         <h2 class="card-title">Search for a City:</h2>
                         <input name="city" id="city" type="text" autofocus="true" class="form-input" placeholder="Enter a City">
-                        <button type="submit" class="btn btn-primary btn-block">Search</button>
+                        <button type="submit" class="btn btn-primary btn-block">Search</button> 
                     </form>
                     <ul class="list-group"></ul>
                 </div>
@@ -28,13 +28,14 @@
         </div>
 
         <div class="container">
-            <div class="card border current-weather">
+            <div class="card border current-weather d-none">
                 <div class="card-body">
                     <h2 class="card-title">Showing Weather for: <span id="city-search-term"></span></h2>
+                    <!-- <img id="current-img" alt="picture of current weather"> -->
                     <div id="weather-container"></div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row fiveDayContainer d-none">
                 <h3 >5-Day Forecast</h3>
                     <div id="fiveDay"></div>
             </div>

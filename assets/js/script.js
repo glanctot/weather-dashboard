@@ -3,7 +3,9 @@ var cityInputEl = document.querySelector("#city");
 var weatherEl = document.querySelector("#weather-container");
 var cityNameEl = document.querySelector("#city-search-term");
 var listEl = document.querySelector(".list-group");
-var fiveDayEl= document.querySelector("#fiveDay");
+var fiveDayEl = document.querySelector("#fiveDay");
+var currentEl = document.querySelector(".current-weather");
+var fiveDayContainer = document.querySelector(".fiveDayContainer");
 
 // api key
 const myKey = "19c8ff289c37224bc84974fe7d88ee33";
@@ -49,11 +51,16 @@ var displayWeather = function(weather, searchTerm) {
     // console.log(weather);
     weatherEl.textContent = "";
 
+    currentEl.classList.remove("d-none");
+    fiveDayContainer.classList.remove("d-none");
+
     // format date
     var date = new Date(weather['dt'] * 1000).toLocaleDateString("en-US");
 
     // icon
     var icon = weather['weather'][0]['icon'];
+    var iconDisplay = document.createElement("img");
+    iconDisplay.setAttribute("src", "https://openweathermap.org/img/wn/" + icon + "@2x.png");
 
     // 
     cityNameEl.innerHTML = searchTerm + " " + date;
@@ -77,6 +84,7 @@ var displayWeather = function(weather, searchTerm) {
     // windDisplay.classList = "list-item";
     windDisplay.textContent = "Wind: " + wind + "MPH";
 
+    weatherEl.appendChild(iconDisplay);
     weatherEl.appendChild(tempDisplay);
     weatherEl.appendChild(humidityDisplay);
     weatherEl.appendChild(windDisplay);
@@ -87,13 +95,20 @@ var displayWeather = function(weather, searchTerm) {
         response.json().then(function(data) {
             var uv = document.createElement("p");
             uv.textContent = "UV Index:" + " " + data['current']['uvi'];
+            if (data['current']['uvi'] < 4) {
+                uv.classList = "badge bg-success";
+            } else if (data['current']['uvi'] < 8) {
+                uv.classList = "badge bg-warning";
+            } else {
+                uv.classList = "badge bg-danger";
+            }
             weatherEl.appendChild(uv);
 
             // console.log(data);
             
             for (var i = 1; i < data['daily'].length - 2; i++) {
                 var fiveDayCard = document.createElement("div");
-                fiveDayCard.classList = "card bg-info";
+                fiveDayCard.classList = "card bg-primary text-light";
                 
 
                 var fiveDay = data['daily'][i]['dt'];
@@ -102,6 +117,7 @@ var displayWeather = function(weather, searchTerm) {
                 var fiveDayTemp = data['daily'][i]['temp']['max'];
                 var fiveDayWind = data['daily'][i]['wind_speed'];
                 var fiveDayHumid = data['daily'][i]['humidity'];
+                var fiveDayIcon = 
 
                 fiveDayCard.textContent = (fiveDayDate +  "Temp: " + fiveDayTemp + "Wind: " + fiveDayWind + "MPH" +  "Humidity: " + fiveDayHumid + "%");
                 
